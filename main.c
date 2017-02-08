@@ -61,17 +61,28 @@ int main(int argc, const char * argv[]) {
             currentFile = filesNumber;
             
             for ( i=0; i < filesNumber; i++) {
+<<<<<<< HEAD
                 if ( ! strcmp( compilationFileName[i], compilationFileName[filesNumber]) ) {
                     strcpy( compilationFileName[filesNumber], " ");
                     filesNumber--;
                     currentFile = i;
 				printf( "da\n");
+=======
+                if ( compilationFileName[i] == compilationFileName[filesNumber]) {
+                    strcpy( compilationFileName[filesNumber], "");
+                    filesNumber--;
+                    currentFile = i;
+>>>>>>> 8accaead283a420308ce8bb0a4eb1a3462651331
                     break;
                 }
             }
             
+<<<<<<< HEAD
            if ( i == filesNumber ) {
 				printf( "da\n");
+=======
+            if ( i == filesNumber ) {
+>>>>>>> 8accaead283a420308ce8bb0a4eb1a3462651331
                 filesNumber++;
                 compilationFileName = realloc( compilationFileName, (filesNumber + 1) * sizeof(char *));
                 if ( compilationFileName == NULL) {
@@ -87,18 +98,27 @@ int main(int argc, const char * argv[]) {
             currentLine = 1;
             
             while ( fgets( lineRead, 512, sourceFile)) {
+<<<<<<< HEAD
                 if ( currentLine >= startLine && currentLine < startLine + linesNumber) {
+=======
+                if ( currentLine >= startLine && currentLine <= startLine + linesNumber) {
+>>>>>>> 8accaead283a420308ce8bb0a4eb1a3462651331
                     fprintf( compilationFile, "%s", lineRead);
                 }
                 currentLine ++;
             }
             
             fclose( sourceFile);
+<<<<<<< HEAD
             //filesNumber++;
         }
         
         printf( "Fisiere folosite: %d\n", filesNumber);
         
+=======
+        }
+        
+>>>>>>> 8accaead283a420308ce8bb0a4eb1a3462651331
         fclose( listFile);
         fclose( compilationFile);
     }
