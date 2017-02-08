@@ -63,16 +63,14 @@ int main(int argc, const char * argv[]) {
 
 			strcpy( compilationFileName[ filesNumber ], lineRead);
             
-            printf("%s\n", compilationFileName[filesNumber]);
+            //printf("%s\n", compilationFileName[filesNumber]);
 
             for ( i=0; i < filesNumber; i++) {
                 if ( ! strcmp( compilationFileName[i], compilationFileName[ currentFile ]) ) {
 					free( compilationFileName[ filesNumber ]);
                     //compilationFileName[ filesNumber ] = NULL;
-
                     filesNumber--;
                     currentFile = i;
-                    printf("da\n");
                     break;
                 }
             }
@@ -104,15 +102,11 @@ int main(int argc, const char * argv[]) {
         }
 
 		for( i=0; i < filesNumber; i++ ) {
-            compilationFileName[i] = malloc(1);
+            //compilationFileName[i] = malloc(1);
             if ( compilationFileName[i] != NULL) {
                 free( compilationFileName[i]);
             }
         }
-        
-		for( i=0; i < filesNumber-1; i++ ) {
-			free( compilationFileName[i]);
-		}
 
 		free( compilationFileName);
         
