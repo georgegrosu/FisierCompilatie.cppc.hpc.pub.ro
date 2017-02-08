@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define INTS 8
+
 int main(int argc, const char * argv[]) {
     char **compilationFileName;
     char lineRead[512];
@@ -33,8 +35,6 @@ int main(int argc, const char * argv[]) {
         strcpy( compilationFileName[0], argv[1]);
         strcat( compilationFileName[0], ".cpl");
         
-        printf( "%s\n", compilationFileName[0]);
-        
         FILE *compilationFile = fopen( compilationFileName[0], "wt");
         if ( compilationFile == NULL) {
             exit( -1);
@@ -53,30 +53,38 @@ int main(int argc, const char * argv[]) {
         endOfFile = ftell( listFile);
         fseek( listFile, 0, SEEK_SET);
         
-        while ( ftell( listFile) != endOfFile) {
-            
-            fscanf( listFile, "%s %d %d", compilationFileName[ filesNumber ], &startLine,
-                   &linesNumber);
+        while ( endOfFile - ftell( listFile) > INTS) {
+
+            fscanf( listFile, "%s %d %d", lineRead, &startLine, &linesNumber);
             
             currentFile = filesNumber;
             
+			compilationFileName[ filesNumber ] = malloc( strlen( lineRead + 1 ));
+
+			strcpy( compilationFileName[ filesNumber ], lineRead);
+            
+            printf("%s\n", compilationFileName[filesNumber]);
+
             for ( i=0; i < filesNumber; i++) {
-                if ( compilationFileName[i] == compilationFileName[filesNumber]) {
-                    strcpy( compilationFileName[filesNumber], "");
+                if ( ! strcmp( compilationFileName[i], compilationFileName[ currentFile ]) ) {
+					free( compilationFileName[ filesNumber ]);
+                    //compilationFileName[ filesNumber ] = NULL;
                     filesNumber--;
                     currentFile = i;
+                    printf("da\n");
                     break;
                 }
             }
             
-            if ( i == filesNumber ) {
-                filesNumber++;
+           filesNumber++;
+
+           if ( i == filesNumber ) {
                 compilationFileName = realloc( compilationFileName, (filesNumber + 1) * sizeof(char *));
                 if ( compilationFileName == NULL) {
                     exit( -1);
                 }
             }
-            
+
             FILE *sourceFile = fopen( compilationFileName[ currentFile ], "rt");
             if ( sourceFile == NULL) {
                 exit( -1);
@@ -85,7 +93,7 @@ int main(int argc, const char * argv[]) {
             currentLine = 1;
             
             while ( fgets( lineRead, 512, sourceFile)) {
-                if ( currentLine >= startLine && currentLine <= startLine + linesNumber) {
+                if ( currentLine >= startLine && currentLine < startLine + linesNumber) {
                     fprintf( compilationFile, "%s", lineRead);
                 }
                 currentLine ++;
@@ -93,6 +101,17 @@ int main(int argc, const char * argv[]) {
             
             fclose( sourceFile);
         }
+
+		for( i=0; i < filesNumber; i++ ) {
+            compilationFileName[i] = malloc(1);
+            if ( compilationFileName[i] != NULL) {
+                free( compilationFileName[i]);
+            }
+        }
+
+		free( compilationFileName);
+        
+        printf( "Fisiere folosite: %d\n", filesNumber);
         
         fclose( listFile);
         fclose( compilationFile);
